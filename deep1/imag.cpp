@@ -7,7 +7,7 @@
 
 Img** csv_to_imgs(const char* file_string, int number_of_imgs) {
 	FILE* fp;
-	Img** imgs = (Img**) malloc(number_of_imgs * sizeof(Img*));
+	Img** imgs = (Img**)malloc(number_of_imgs * sizeof(Img*));
 	char row[MAXCHAR];
 	fp = fopen(file_string, "r");
 
@@ -15,7 +15,7 @@ Img** csv_to_imgs(const char* file_string, int number_of_imgs) {
 	fgets(row, MAXCHAR, fp);
 	int i = 0;
 	while (feof(fp) != 1 && i < number_of_imgs) {
-		imgs[i] = (Img*) malloc(sizeof(Img));
+		imgs[i] = (Img*)malloc(sizeof(Img));
 
 		int j = 0;
 		fgets(row, MAXCHAR, fp);

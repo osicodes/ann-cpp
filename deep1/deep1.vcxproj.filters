@@ -27,6 +27,12 @@
     <ClCompile Include="imag.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="nn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="activations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="matrix.h">
@@ -38,10 +44,11 @@
     <ClInclude Include="imag.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\..\Documents\AI\ANN with CPP\mnist_test.csv\mnist_test.csv">
-      <Filter>Resource Files</Filter>
-    </None>
+    <ClInclude Include="nn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="activations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
