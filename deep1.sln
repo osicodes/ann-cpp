@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "deep1", "deep1\deep1.vcxproj", "{97E46EA6-471F-4869-A4D3-E3152F82E879}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{860AADB4-B7EA-4C9E-90BE-E6A796164905}"
-	ProjectSection(SolutionItems) = preProject
-		..\..\..\Documents\AI\ANN with CPP\mnist_test.csv\mnist_test.csv = ..\..\..\Documents\AI\ANN with CPP\mnist_test.csv\mnist_test.csv
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
