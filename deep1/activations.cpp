@@ -1,10 +1,20 @@
 #include "activations.h"
 
 #include <cmath>
+#include <algorithm>
 #include "mathsMatrix.h"
 
 double sigmoid(double input) {
 	return 1.0 / (1 + exp(-1 * input));
+}
+
+
+double relu(double input) {
+	return std::max(0.0,input);
+}
+
+double tan_h(double input) {
+	return tanh(input);
 }
 
 Matrix* sigmoidPrime(Matrix* m) {

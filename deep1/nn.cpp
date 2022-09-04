@@ -34,8 +34,10 @@ Matrix* network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
 	Matrix* final_inputs = dot(net->output_weights, hidden_outputs);
 	Matrix* final_outputs = apply(sigmoid, final_inputs);
 
+	//----was just added
 	Matrix* compare = matrix_create(10, 1);
 	compare = softmax(final_inputs);
+	//---------------
 
 	// Find errors
 	Matrix* output_errors = subtract(output, final_outputs);

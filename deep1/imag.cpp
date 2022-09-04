@@ -26,7 +26,7 @@ Img** csv_to_imgs(const char* file_string, int number_of_imgs) {
 				imgs[i]->label = atoi(token);
 			}
 			else {
-				imgs[i]->img_data->entries[(j - 1) / 28][(j - 1) % 28] = atoi(token) / 256.0;
+				imgs[i]->img_data->entries[(j - 1) / 28][(j - 1) % 28] = atoi(token) / 256.0; //--> batch normalization (each value / 256)
 			}
 			token = strtok(NULL, ",");
 			j++;

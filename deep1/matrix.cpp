@@ -118,7 +118,7 @@ void my_matrix_randomize(Matrix* m, int in, int cu, const char* activefunc) {
 	---------------------
 
 
-	Xavier normalized initialization  (Good for other activation functions{Linear, sigmoid, tanh, softmax, logistics},
+	Xavier normalized initialization  (Good for other activation functions{Linear, sigmoid/logistics, tanh, softmax, },
 													 but not very good for RELU)
 	 sqrt(1 / ave)
 	 ave = (in + cu) / 2
@@ -145,7 +145,7 @@ void my_matrix_randomize(Matrix* m, int in, int cu, const char* activefunc) {
 	standard deviation (v) = 1 / sqrt(ave)
 	ave = (in + cu) / 2
 
-	For  Sigmoid activation function, 1 / (1 + exp(-x))
+	For  Sigmoid/logistics activation function, 1 / (1 + exp(-x))
 	standard deviation (v) = 3.6 / sqrt(in)
 
 	For  RELU activation function, max(0,x)

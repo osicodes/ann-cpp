@@ -82,7 +82,7 @@
         cout << "predicted output: " << endl;
         matrix_print(result);
 
-        network_save(net, "one_ex");
+        //network_save(net, "one_ex");
 
         return 0;
     }
