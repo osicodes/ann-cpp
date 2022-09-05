@@ -36,11 +36,12 @@ Matrix* network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
 
 	//----was just added
 	Matrix* compare = matrix_create(10, 1);
-	compare = softmax(final_inputs);
+	compare = softmax(beforeSoftmax(final_outputs));
 	//---------------
 
 	// Find errors
 	Matrix* output_errors = subtract(output, final_outputs);
+	//output_errors = multiply(output_errors, output_errors);
 	Matrix* hidden_errors = dot(transpose(net->output_weights), output_errors);
 
 	// Backpropogate
@@ -148,6 +149,7 @@ Matrix* network_predict(NeuralNetwork* net, Matrix* input_data) {
 	Matrix* final_inputs = dot(net->output_weights, hidden_outputs);
 	Matrix* final_outputs = apply(sigmoid, final_inputs);
 	Matrix* result = softmax(final_outputs);
+	//Matrix* result = softmax(beforeSoftmax(final_outputs));  //Use this when using relu activation
 	return result;
 }
 

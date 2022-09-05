@@ -77,12 +77,25 @@
         cout << "output to compare: " << endl;
         matrix_print(compare);
 
+
+        cout << endl;
+        cout << "softmax compare: " << endl;
+        matrix_print(beforeSoftmax(compare));
+
         Matrix* result = network_predict(net, img_data);
         cout << endl;
         cout << "predicted output: " << endl;
-        matrix_print(result);
+        matrix_print(result); 
 
-        //network_save(net, "one_ex");
+
+        cout << endl;
+        cout << "mse: " << endl;
+        cout << mse(compare, result);
+
+
+        cout << endl;
+        cout << "mse_prime: " << endl;
+        matrix_print(mse_prime(compare,result));
 
         return 0;
     }

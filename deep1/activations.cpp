@@ -17,6 +17,10 @@ double tan_h(double input) {
 	return tanh(input);
 }
 
+double tan_hPrime(double input) {
+	return 1 - pow(input, 2);
+}
+
 Matrix* sigmoidPrime(Matrix* m) {
 	Matrix* ones = matrix_create(m->rows, m->cols);
 	matrix_fill(ones, 1);
