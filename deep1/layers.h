@@ -7,13 +7,13 @@ typedef struct Dense {
     Matrix* weight;
     Matrix* bias;
     Matrix* backwardInput;
-    Dense(int row, int col) {
-        weight = matrix_create(row, col);
-        bias = matrix_create(row, 1);
-        backwardInput = matrix_create(col, 1);
+    Dense(int in, int out, const char* initializationfunc) {
+        weight = matrix_create(out, in);
+        bias = matrix_create(out, 1);
+        backwardInput = matrix_create(in, 1);
 
-        my_matrix_randomize(weight, weight->rows, weight->cols, "relu");
-        my_matrix_randomize(bias, bias->rows, 1, "relu");
+        my_matrix_randomize(weight, weight->rows, weight->cols, initializationfunc);
+        my_matrix_randomize(bias, bias->rows, 1, initializationfunc);
     }
 
     Matrix* forward(Matrix* input)

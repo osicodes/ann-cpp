@@ -1,3 +1,4 @@
+
 #include "nn.h"
 #include <sys/stat.h>
 #include <unistd.h>
@@ -6,13 +7,15 @@
 #include <cstring>
 #include "mathsMatrix.h"
 #include "activations.h"
+#include "layers.h"
 
 #define MAXCHAR 1000
 
-// 784, 300, 10
+// 784, 300, 10, 0.01
 NeuralNetwork* network_create(int input, int hidden, int output, double lr) {
 	NeuralNetwork* net = (NeuralNetwork*)malloc(sizeof(NeuralNetwork));
-	net->input = input;
+	/*
+	net->input =  input;
 	net->hidden = hidden;
 	net->output = output;
 	net->learning_rate = lr;
@@ -24,10 +27,29 @@ NeuralNetwork* network_create(int input, int hidden, int output, double lr) {
 	my_matrix_randomize(output_layer, hidden, output, "softmax");
 	net->hidden_weights = hidden_layer;
 	net->output_weights = output_layer;
+	*/
+
+	net->input = input;
+	net->hidden = hidden;
+	net->output = output;
+	net->learning_rate = lr;
+	Dense hidden_layer = Dense(input, hidden, "he");
+	Dense output_layer = Dense(hidden, output,"he");
+	net->hidden_weights = hidden_layer.weight;
+	net->hidden_bias = hidden_layer.bias;
+
+	net->output_weights = output_layer.weight;
+	net->output_bias = output_layer.bias;
+
+	net->learning_rate = lr;
+
+	net->hidden_layer = hidden_layer;
+	net->output_layer = output_layer;
 	return net;
 }
 
-Matrix* network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
+double network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
+	/*
 	// Feed forward
 	Matrix* hidden_inputs = dot(net->hidden_weights, input);
 	Matrix* hidden_outputs = apply(sigmoid, hidden_inputs);
@@ -109,6 +131,54 @@ Matrix* network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
 	matrix_free(output_errors);
 	matrix_free(hidden_errors);
 	return compare;
+	*/
+
+
+	// Feed forward
+	//Matrix* hidden_inputs = dot(net->hidden_weights, input);
+	//Matrix* hidden_outputs = apply(sigmoid, hidden_inputs);
+	//Matrix* final_inputs = dot(net->output_weights, hidden_outputs);
+	//Matrix* final_outputs = apply(sigmoid, final_inputs);
+
+	Matrix* forward_inputs = net->hidden_layer.forward(input);
+	Tanh reluhid;
+	forward_inputs = reluhid.forward(forward_inputs);
+	forward_inputs = net->output_layer.forward(forward_inputs);
+	Tanh reluout;
+	Matrix* final_outputs = reluout.forward(forward_inputs);
+
+	
+
+	/*//----was just added
+	Matrix* compare = matrix_create(10, 1);
+	compare = softmax(beforeSoftmax(final_outputs));
+	//---------------*/
+
+	//------Find errors and derivative of error-------
+	double error = mse(output, final_outputs);
+	//printf("\n error : %1.5f\n", error);
+
+	//Matrix* output_errors = subtract(output, final_outputs);
+	//Matrix* hidden_errors = dot(transpose(net->output_weights), output_errors);
+
+	Matrix* grad_output_errors = mse_prime(output, final_outputs);
+
+
+	grad_output_errors = reluout.backward(grad_output_errors, net->learning_rate);
+	grad_output_errors = net->output_layer.backward(grad_output_errors, net->learning_rate);
+	grad_output_errors = reluhid.backward(grad_output_errors, net->learning_rate);
+	grad_output_errors = net->hidden_layer.backward(grad_output_errors, net->learning_rate);
+
+	matrix_free(net->output_weights); // Free the old weights before replacing
+	net->output_weights = net->output_layer.weight;
+
+	matrix_free(net->hidden_weights); // Free the old hidden_weights before replacement
+	net->hidden_weights = net->hidden_layer.weight;
+
+	// Free matrices
+	matrix_free(final_outputs);
+	return error;
+
 }
 
 void network_train_batch_imgs(NeuralNetwork* net, Img** imgs, int batch_size) {
@@ -117,15 +187,18 @@ void network_train_batch_imgs(NeuralNetwork* net, Img** imgs, int batch_size) {
 		Img* cur_img = imgs[i];
 		Matrix* img_data = matrix_flatten(cur_img->img_data, 0); // 0 = flatten to column vector
 		Matrix* output = matrix_create(10, 1);
-		output->entries[cur_img->label][0] = 1; // Setting the result
-		network_train(net, img_data, output);
+		//output->entries[cur_img->label][0] = 1; ;// 
+		column_output(output, cur_img->label);// Setting the result
+		double er = network_train(net, img_data, output);
+		printf("\n err : %1.5f\n", er);
 		matrix_free(output);
-		matrix_free(img_data);
+		//matrix_free(img_data);
 	}
 }
 
 Matrix* network_predict_img(NeuralNetwork* net, Img* img) {
 	Matrix* img_data = matrix_flatten(img->img_data, 0);
+	printf("\ntest label : %d\n", img->label);
 	Matrix* res = network_predict(net, img_data);
 	matrix_free(img_data);
 	return res;
@@ -135,6 +208,7 @@ double network_predict_imgs(NeuralNetwork* net, Img** imgs, int n) {
 	int n_correct = 0;
 	for (int i = 0; i < n; i++) {
 		Matrix* prediction = network_predict_img(net, imgs[i]);
+		printf("predicted output: %d\n", matrix_argmax(prediction));
 		if (matrix_argmax(prediction) == imgs[i]->label) {
 			n_correct++;
 		}
@@ -144,13 +218,24 @@ double network_predict_imgs(NeuralNetwork* net, Img** imgs, int n) {
 }
 
 Matrix* network_predict(NeuralNetwork* net, Matrix* input_data) {
-	Matrix* hidden_inputs = dot(net->hidden_weights, input_data);
+	/*Matrix* hidden_inputs = dot(net->hidden_weights, input_data);
 	Matrix* hidden_outputs = apply(sigmoid, hidden_inputs);
 	Matrix* final_inputs = dot(net->output_weights, hidden_outputs);
 	Matrix* final_outputs = apply(sigmoid, final_inputs);
+	//Matrix* result = softmax(final_outputs);
+	Matrix* result = softmax(beforeSoftmax(final_outputs));  //Use this when using relu activation
+	return result;*/
+
+
+	Matrix* forward_inputs = net->hidden_layer.forward(input_data);
+	Tanh reluhid;
+	forward_inputs = reluhid.forward(forward_inputs);
+	forward_inputs = net->output_layer.forward(forward_inputs);
+	Tanh reluout;
+	Matrix* final_outputs = reluout.forward(forward_inputs);
 	Matrix* result = softmax(final_outputs);
 	//Matrix* result = softmax(beforeSoftmax(final_outputs));  //Use this when using relu activation
-	return result;
+	return result; 
 }
 
 void network_save(NeuralNetwork* net, const char* file_string) {

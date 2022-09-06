@@ -16,11 +16,11 @@
     int main() {
         srand(time(NULL));
 
-        Matrix* ins = matrix_create(2, 1);
+        /*Matrix* ins = matrix_create(2, 1);
         //matrix_fill(ins, 2);
         ins->entries[0][0] = 10;
         ins->entries[1][0] = 5;
-        Dense denl = Dense(1, 2);
+        Dense denl = Dense(1, 2, "he");
         Matrix*  ss = denl.forward(ins);
 
         Matrix* tru = matrix_create(1, 1);
@@ -50,39 +50,12 @@
         cout << "bias after: " << endl;
         matrix_print(denl.bias);
         cout << endl;
-        cout << endl;
+        cout << endl;*/
 
-        /*int num1 = 70;
-        double num2 = 256.783;
-        char ch = 'A';
-        Matrix* mt;
-        Matrix* pt;
-        Matrix* st;
+        
 
-        cout << num1 << endl;    // print integer
-        cout << num2 << endl;    // print double
-        cout << "character: " << ch << endl;
-
-        mt = matrix_create(4, 4);
-        matrix_fill(mt, 6);
-        matrix_print(mt);
-
-        pt = matrix_create(4, 4);
-        matrix_fill(pt,2);
-        matrix_print(pt);
-
-        cout << "Enter values yourself" << endl;
-        st = matrix_create(4, 4);
-        matrix_myfill(st);
-        matrix_print(st);
-
-        matrix_print(transpose(st));
-
-
-        matrix_print(multiply(mt, pt));
-        matrix_print(dot(mt, pt));*/
-
-        const char* str = "C:\\Users\\ozuem\\Documents\\AI\\ANN with CPP\\mnist_test.csv\\mnist_test.csv";
+        const char* train = "C:\\Users\\ozuem\\Documents\\AI\\ANN with CPP\\mnist_train.csv\\mnist_train.csv";
+        const char* test = "C:\\Users\\ozuem\\Documents\\AI\\ANN with CPP\\mnist_test.csv\\mnist_test.csv";
         /*FILE* pFile;
         char mystring[785];
 
@@ -94,45 +67,35 @@
             fclose(pFile);
         }*/
 
-        Img** img = csv_to_imgs(str, 2);
-        //img_print(img[1]);
+        NeuralNetwork* net = network_create(784, 300, 10, 0.001);
 
-        //matrix_print(img[1]->img_data);
+        Img** img = csv_to_imgs(train, 5000);
+        network_train_batch_imgs(net, img, 800);
 
-        NeuralNetwork* net = network_create(784, 300, 10, 0.01);
-
+        /*Img** img = csv_to_imgs(str, 2);
         Img* cur_img = img[0];
         cout << "label: " << cur_img->label << endl;
         Matrix* img_data = matrix_flatten(cur_img->img_data, 0); // 0 = flatten to column vector
+
         Matrix* output = matrix_create(10, 1);
-        output->entries[cur_img->label][0] = 1; // Setting the result
+        column_output(output, cur_img->label);
         matrix_print(output);
 
 
-        Matrix* compare = network_train(net, img_data, output);
+        double error = network_train(net, img_data, output);
         cout << endl;
-        cout << "output to compare: " << endl;
-        matrix_print(compare);
-
+        //cout << "error: " << error << endl;*/
 
         cout << endl;
-        cout << "softmax compare: " << endl;
-        matrix_print(beforeSoftmax(compare));
-
-        Matrix* result = network_predict(net, img_data);
         cout << endl;
-        cout << "predicted output: " << endl;
-        matrix_print(result); 
-
-
         cout << endl;
-        cout << "mse: " << endl;
-        cout << mse(compare, result);
-
-
+        //Matrix* result = network_predict_img(net, img[480]);
+        Img** imag = csv_to_imgs(train, 500);
+        double acc = network_predict_imgs(net, imag, 100);
         cout << endl;
-        cout << "mse_prime: " << endl;
-        matrix_print(mse_prime(compare,result));
+        cout << "accuracy: " << acc << endl;
+        cout << endl;
+        
 
         return 0;
     }

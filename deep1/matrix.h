@@ -19,3 +19,4 @@ void my_matrix_randomize(Matrix* m, int in, int cu, const char* activefunc);
 void matrix_randomize(Matrix* m, int n);
 int matrix_argmax(Matrix* m);
 Matrix* matrix_flatten(Matrix* m, int axis);
+void column_output(Matrix* output, int label);

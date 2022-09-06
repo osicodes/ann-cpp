@@ -57,14 +57,7 @@ Matrix* subtract(Matrix* m1, Matrix* m2) {
 }
 
 Matrix* beforeSoftmax(Matrix* m1) {
-	double maxnum = m1->entries[0][0];
-
-	for (int i = 1; i < m1->rows; i++) {
-		for (int j = 0; j < m1->cols; j++) {
-			if (maxnum < m1->entries[i][j])
-				maxnum = m1->entries[i][j];
-		}
-	}
+	double maxnum = matrix_argmax(m1);
 	
 	Matrix* m = matrix_create(m1->rows, m1->cols);
 	for (int i = 0; i < m1->rows; i++) {
@@ -138,7 +131,7 @@ Matrix* transpose(Matrix* m) {
 
 // Mean Square Error
 double mse(Matrix* m1, Matrix* m2) {
-	if (check_dimensions(m1, m2)) {
+	if (check_dimensions(m1, m2)) { //true_y - predicted_y 
 		double error = 0.0;
 		for (int i = 0; i < m1->rows; i++) {
 			for (int j = 0; j < m2->cols; j++) {

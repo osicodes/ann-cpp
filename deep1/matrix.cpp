@@ -104,7 +104,7 @@ double uniform_distribution(double low, double high) {
 }
 
 
-void my_matrix_randomize(Matrix* m, int in, int cu, const char* activefunc) {
+void my_matrix_randomize(Matrix* m, int in, int cu, const char* initializationfunc) {
 	/*
 	in -->  Number of nodes/neurons in input or previous layer (or number of input neurons coming into this current layer)
 	cu -->  Number of nodes/neurons in current layer (not input or previous layer)
@@ -163,7 +163,7 @@ void my_matrix_randomize(Matrix* m, int in, int cu, const char* activefunc) {
 	int size_l = cu;
 	int size_l_minus_1 = in;
 
-	if (activefunc == "relu")
+	if (initializationfunc == "he")
 	{
 		double min = -sqrt(2) / sqrt(size_l_minus_1);
 		double max = sqrt(2) / sqrt(size_l_minus_1);
@@ -173,7 +173,7 @@ void my_matrix_randomize(Matrix* m, int in, int cu, const char* activefunc) {
 			}
 		}
 	}
-	else if (activefunc == "softmax" || "tanh")
+	else if (initializationfunc == "glorot_norm")
 	{
 		double min = -sqrt(2) / sqrt(size_l_minus_1 + size_l);
 		double max = sqrt(2) / sqrt(size_l_minus_1 + size_l);
@@ -182,6 +182,11 @@ void my_matrix_randomize(Matrix* m, int in, int cu, const char* activefunc) {
 				m->entries[i][j] = uniform_distribution(min, max);
 			}
 		}
+	}
+	else
+	{
+		printf("'%s' is not an initialization method", initializationfunc);
+		exit(1);
 	}
 
 
@@ -236,4 +241,18 @@ Matrix* matrix_flatten(Matrix* m, int axis) {
 		}
 	}
 	return mat;
+}
+
+void column_output(Matrix* output,int label){
+	for (int i = 0; i < output->rows; i++) {
+		for (int j = 0; j < output->cols; j++) {
+			if (i == label) {
+				output->entries[i][0] = 1;
+			}
+			else
+			{
+				output->entries[i][0] = 0;
+			}
+		}
+	}
 }
