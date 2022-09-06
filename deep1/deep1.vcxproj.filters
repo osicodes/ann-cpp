@@ -33,6 +33,9 @@
     <ClCompile Include="activations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Dense.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="matrix.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="activations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="layers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

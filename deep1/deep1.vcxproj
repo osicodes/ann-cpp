@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="activations.cpp" />
+    <ClCompile Include="Dense.cpp" />
     <ClCompile Include="imag.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix.cpp" />
@@ -148,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="activations.h" />
+    <ClInclude Include="layers.h" />
     <ClInclude Include="imag.h" />
     <ClInclude Include="mathsMatrix.h" />
     <ClInclude Include="matrix.h" />

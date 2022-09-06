@@ -8,12 +8,49 @@
 #include "nn.h"
 #include "matrix.h"
 #include "mathsMatrix.h"
+#include "layers.h"
     using namespace std;
 
     double uniform_distribution(double, double);
 
     int main() {
         srand(time(NULL));
+
+        Matrix* ins = matrix_create(2, 1);
+        //matrix_fill(ins, 2);
+        ins->entries[0][0] = 10;
+        ins->entries[1][0] = 5;
+        Dense denl = Dense(1, 2);
+        Matrix*  ss = denl.forward(ins);
+
+        Matrix* tru = matrix_create(1, 1);
+        tru->entries[0][0] = 1;
+        Matrix* grad = mse_prime(tru, ss);
+
+
+        cout << endl;
+        cout << "weighted sum: " << endl;
+        matrix_print(ss);
+        cout << endl;
+        cout << "weight before: " << endl;
+        matrix_print(denl.weight);
+        cout << endl;
+        cout << endl;
+        cout << "bias before: " << endl;
+        matrix_print(denl.bias);
+        cout << endl;
+        cout << endl;
+
+        Matrix* bk = denl.backward(grad, 0.005);
+        cout << endl;
+        cout << "weight after: " << endl;
+        matrix_print(denl.weight);
+        cout << endl;
+        cout << endl;
+        cout << "bias after: " << endl;
+        matrix_print(denl.bias);
+        cout << endl;
+        cout << endl;
 
         /*int num1 = 70;
         double num2 = 256.783;

@@ -153,8 +153,9 @@ double mse(Matrix* m1, Matrix* m2) {
 	}
 }
 
-// Mean Square error prime
+// Mean Square error prime  ---  d(cost func)/d(activated output)
 Matrix* mse_prime(Matrix* m1, Matrix* m2) {
-	Matrix* output = subtract(m1, m2);
-	return scale(2.0/m1->rows, output);
+	Matrix* output = subtract(m1, m2); //true_y - predicted_y  
+	double sc = 2.0 / m1->rows;
+	return scale(sc, output);
 }
