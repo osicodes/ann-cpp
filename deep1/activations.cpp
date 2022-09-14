@@ -62,3 +62,21 @@ Matrix* softmax(Matrix* m) {
 	}
 	return mat;
 }
+
+Matrix* softmax_prime(int sz, Matrix* m) {
+	
+	Matrix* mat = matrix_create(sz, sz);
+	for (int i = 0; i < mat->rows; i++) {
+		for (int j = 0; j < mat->cols; j++) {
+			if (i == j)
+			{
+				mat->entries[i][j] = m->entries[i][0] * (1 - m->entries[j][0]);
+			}
+			else if (i != j)
+			{
+				mat->entries[i][j]  = -(m->entries[i][0] * m->entries[j][0]);
+			}
+		}
+	}
+	return mat;
+}

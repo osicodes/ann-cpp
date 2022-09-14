@@ -70,7 +70,7 @@
         NeuralNetwork* net = network_create(784, 300, 10, 0.001);
 
         Img** img = csv_to_imgs(train, 5000);
-        network_train_batch_imgs(net, img, 800);
+        network_train_batch_imgs(net, img, 4000);
 
         /*Img** img = csv_to_imgs(str, 2);
         Img* cur_img = img[0];
@@ -95,6 +95,18 @@
         cout << endl;
         cout << "accuracy: " << acc << endl;
         cout << endl;
+
+
+        /*Matrix* mat = matrix_create(10, 1);
+        matrix_fill(mat, 1);
+        cout << endl;
+        Matrix* tmp = softmax(mat);
+        cout << "tmp: " << endl;
+        matrix_print(tmp);
+        cout << endl;
+        cout << endl;
+        cout << "deriv softmax: " << endl;
+        matrix_print(dot(softmax_prime(mat->rows, tmp),mat));*/
         
 
         return 0;

@@ -141,10 +141,10 @@ double network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
 	//Matrix* final_outputs = apply(sigmoid, final_inputs);
 
 	Matrix* forward_inputs = net->hidden_layer.forward(input);
-	Tanh reluhid;
+	Relu reluhid;
 	forward_inputs = reluhid.forward(forward_inputs);
 	forward_inputs = net->output_layer.forward(forward_inputs);
-	Tanh reluout;
+	Softmax reluout;
 	Matrix* final_outputs = reluout.forward(forward_inputs);
 
 	
@@ -155,13 +155,15 @@ double network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
 	//---------------*/
 
 	//------Find errors and derivative of error-------
-	double error = mse(output, final_outputs);
+	//double error = mse(output, final_outputs);
+	double error = cross_enthropy(output, final_outputs);
 	//printf("\n error : %1.5f\n", error);
 
 	//Matrix* output_errors = subtract(output, final_outputs);
 	//Matrix* hidden_errors = dot(transpose(net->output_weights), output_errors);
 
-	Matrix* grad_output_errors = mse_prime(output, final_outputs);
+	//Matrix* grad_output_errors = mse_prime(output, final_outputs);
+	Matrix* grad_output_errors = cross_enthropy_prime(output, final_outputs);
 
 
 	grad_output_errors = reluout.backward(grad_output_errors, net->learning_rate);
@@ -228,14 +230,14 @@ Matrix* network_predict(NeuralNetwork* net, Matrix* input_data) {
 
 
 	Matrix* forward_inputs = net->hidden_layer.forward(input_data);
-	Tanh reluhid;
+	Relu reluhid;
 	forward_inputs = reluhid.forward(forward_inputs);
 	forward_inputs = net->output_layer.forward(forward_inputs);
-	Tanh reluout;
+	Softmax reluout;
 	Matrix* final_outputs = reluout.forward(forward_inputs);
 	Matrix* result = softmax(final_outputs);
 	//Matrix* result = softmax(beforeSoftmax(final_outputs));  //Use this when using relu activation
-	return result; 
+	return final_outputs;
 }
 
 void network_save(NeuralNetwork* net, const char* file_string) {

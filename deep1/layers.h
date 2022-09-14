@@ -83,3 +83,20 @@ typedef struct Tanh {
         return multiply(output_gradient, apply(tan_h_prime, backwardInput));
     }
 };
+
+typedef struct Softmax {
+    Matrix* backwardInput;
+
+    Matrix* forward(Matrix* input)
+    {
+        backwardInput = matrix_create(input->rows, input->cols);
+        backwardInput = input;
+        return softmax(input);
+    }
+
+    Matrix* backward(Matrix* output_gradient, double learning_rate)
+    {
+        Matrix* tmp = softmax(backwardInput);
+        return dot(softmax_prime(backwardInput->rows, tmp), output_gradient);
+    }
+};

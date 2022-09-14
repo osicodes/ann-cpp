@@ -79,6 +79,24 @@ Matrix* apply(double (*func)(double), Matrix* m) {
 	return mat;
 }
 
+Matrix* identity(int num)
+{
+	int row, col;
+	Matrix* m = matrix_create(num, num);
+	for (row = 0; row < num; row++)
+	{
+		for (col = 0; col < num; col++)
+		{
+			// Checking if row is equal to column
+			if (row == col)
+				m->entries[row][col] = 1.0;
+			else
+				m->entries[row][col] = 0.0;
+		}
+	}
+	return m;
+}
+
 Matrix* dot(Matrix* m1, Matrix* m2) {
 	if (m1->cols == m2->rows) {
 		Matrix* m = matrix_create(m1->rows, m2->cols);
@@ -151,4 +169,26 @@ Matrix* mse_prime(Matrix* m1, Matrix* m2) {
 	Matrix* output = subtract(m1, m2); //true_y - predicted_y  
 	double sc = 2.0 / m1->rows;
 	return scale(sc, output);
+}
+
+// Cross Enthropy Error
+double cross_enthropy(Matrix* m1, Matrix* m2) {
+	if (check_dimensions(m1, m2)) { //true_y * log(predicted_y)
+		double error = 0.0;
+		for (int i = 0; i < m1->rows; i++) {
+			for (int j = 0; j < m2->cols; j++) {
+				error += m1->entries[i][j] * log(m2->entries[i][j]);
+			}
+		}
+		return -1 * error;
+	}
+	else {
+		printf("Dimension mistmatch subtract: %dx%d %dx%d\n", m1->rows, m1->cols, m2->rows, m2->cols);
+		exit(1);
+	}
+}
+
+Matrix* cross_enthropy_prime(Matrix* m1, Matrix* m2) {
+	Matrix* output = subtract(m2, m1); //predicted_y  - true_y 
+	return output;
 }
